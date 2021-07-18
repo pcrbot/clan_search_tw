@@ -49,7 +49,7 @@ https://github.com/pcrbot/clan_search_tw
 
 可看下方链接：
 
-https://www.594594.xyz/2021/07/13/clan_search_tw/
+https://www.594594.xyz/2021/07/13/clan_search_tw_for_hoshino/
 
 或本页面：
 
