@@ -12,7 +12,8 @@ if os.path.exists(R.img('clan_rank_tw').path):
 else:
     os.mkdir(R.img('clan_rank_tw').path)
 
-_flmt = FreqLimiter(5)
+_limtime = 5    # 单个人查询冷却时间（单位：喵）
+_flmt = FreqLimiter(_limtime)
 sv_help = '''命令如下，注意空格别漏：
 
 [查档线 1] 查看档线，数字为服务器编号(1/2/3/4)
@@ -45,7 +46,7 @@ async def auto_clean():
 async def search_line(bot, ev):
     uid = ev['user_id']
     if not _flmt.check(uid):
-        await bot.send(ev, '请勿频繁操作，冷却时间为5秒！', at_sender=True)
+        await bot.send(ev, f'请勿频繁操作，冷却时间为{_limtime}秒！', at_sender=True)
         return
     alltext = ev.message.extract_plain_text()
     if alltext != '1' and alltext != '2' and alltext != '3' and alltext != '4':
@@ -67,10 +68,10 @@ async def search_line(bot, ev):
 
 # 按 公会名 查询排名
 @sv.on_prefix('查公会')
-async def search_line(bot, ev):
+async def search_clan(bot, ev):
     uid = ev['user_id']
     if not _flmt.check(uid):
-        await bot.send(ev, '请勿频繁操作，冷却时间为5秒！', at_sender=True)
+        await bot.send(ev, f'请勿频繁操作，冷却时间为{_limtime}秒！', at_sender=True)
         return
     alltext = ev.message.extract_plain_text()
     info_tmp = re.split(r' ', alltext)
@@ -99,10 +100,10 @@ async def search_line(bot, ev):
 
 # 按 会长名 查询排名
 @sv.on_prefix('查会长')
-async def search_line(bot, ev):
+async def search_leader(bot, ev):
     uid = ev['user_id']
     if not _flmt.check(uid):
-        await bot.send(ev, '请勿频繁操作，冷却时间为5秒！', at_sender=True)
+        await bot.send(ev, f'请勿频繁操作，冷却时间为{_limtime}秒！', at_sender=True)
         return
     alltext = ev.message.extract_plain_text()
     info_tmp = re.split(r' ', alltext)
@@ -127,10 +128,10 @@ async def search_line(bot, ev):
 
 # 按 排名 查询公会
 @sv.on_prefix('查排名')
-async def search_line(bot, ev):
+async def search_rank(bot, ev):
     uid = ev['user_id']
     if not _flmt.check(uid):
-        await bot.send(ev, '请勿频繁操作，冷却时间为5秒！', at_sender=True)
+        await bot.send(ev, f'请勿频繁操作，冷却时间为{_limtime}秒！', at_sender=True)
         return
     alltext = ev.message.extract_plain_text()
     info_tmp = re.split(r' ', alltext)
