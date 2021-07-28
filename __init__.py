@@ -258,9 +258,19 @@ async def search_locked(bot, ev):
         server = server.replace('服公会', '')
     uptime = get_current_time()
     clan_score, filename_tmp = get_score_clan(server, uptime, clan_name)
-    create_img(clan_score, filename_tmp)
-    clan_img = ' '.join(map(str, [
-        R.img(f'clan_rank_tw/' + filename_tmp).cqcode,
-    ]))
-    msg = f'台服 {server}服 公会名查询 “{clan_name}” 结果如下：\n时间档：{uptime}\n（数据来自infedg.xyz）\n{clan_img}'
+    info_data = clan_score
+    allid = info_data['data'].keys()
+    for id in allid:
+        rank = info_data['data'][str(id)]['rank']
+        clan_name = info_data['data'][str(id)]['clan_name']
+        member_num = info_data['data'][str(id)]['member_num']
+        leader_name = info_data['data'][str(id)]['leader_name']
+        damage = info_data['data'][str(id)]['damage']
+        lap = info_data['data'][str(id)]['lap']
+        boss_id = info_data['data'][str(id)]['boss_id']
+        remain = info_data['data'][str(id)]['remain']
+        grade_rank = info_data['data'][str(id)]['grade_rank']
+    msg = f'公会名：{clan_name}\n时间档：{uptime}\n排名：{rank}'
+    msg = msg + f'\n会长：{leader_name}\n人数：{member_num}人\n分数：{damage}'
+    msg = msg + f'\n周目：{lap}周目\n当前BOSS：{boss_id}\n剩余血量：{remain}\n上期排名：{grade_rank}'
     await bot.send(ev, msg)
