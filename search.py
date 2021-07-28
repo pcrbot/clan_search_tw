@@ -94,7 +94,7 @@ def create_img(info_data, filename_tmp):
     del draw
     del im
     draw = ImageDraw.Draw(im_new, 'RGB')
-    draw.multiline_text((space,space), table_info, fill=(0, 0, 0), align ='center', font=font)
+    draw.multiline_text((space,space), table_info, fill=(0, 0, 0), font=font)
     save_dir = R.img('clan_rank_tw').path
     path_dir = os.path.join(save_dir, filename_tmp)
     im_new.save(path_dir, 'PNG')
