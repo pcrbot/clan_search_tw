@@ -6,6 +6,7 @@ import datetime
 from datetime import timedelta
 import calendar
 import time
+import re
 from hoshino import R
 
 # 通用头
@@ -66,8 +67,12 @@ def create_img(info_data, filename_tmp):
     for id in allid:
         rank = info_data['data'][str(id)]['rank']
         clan_name = info_data['data'][str(id)]['clan_name']
+        # 去除特殊字符，只保留中英日韩数字
+        clan_name = re.sub(u"([^\u4e00-\u9fa5\u0030-\u0039\u0041-\u005a\u0061-\u007a\uAC00-\uD7AF\u3040-\u31FF])","",clan_name)
         member_num = info_data['data'][str(id)]['member_num']
         leader_name = info_data['data'][str(id)]['leader_name']
+        # 去除特殊字符，只保留中英日韩数字
+        leader_name = re.sub(u"([^\u4e00-\u9fa5\u0030-\u0039\u0041-\u005a\u0061-\u007a\uAC00-\uD7AF\u3040-\u31FF])","",leader_name)
         damage = info_data['data'][str(id)]['damage']
         lap = info_data['data'][str(id)]['lap']
         boss_id = info_data['data'][str(id)]['boss_id']
@@ -75,13 +80,13 @@ def create_img(info_data, filename_tmp):
         grade_rank = info_data['data'][str(id)]['grade_rank']
         table.add_row([rank, clan_name, member_num, leader_name, damage, lap, boss_id, remain, grade_rank])
 
-    table.set_style(PLAIN_COLUMNS)
+    # table.set_style(PLAIN_COLUMNS)
     # print(table)
 
     table_info = str(table)
     space = 5
     current_dir = os.path.join(os.path.dirname(__file__), 'simhei.ttf')
-    font = ImageFont.truetype(current_dir, 15, encoding='utf-8')
+    font = ImageFont.truetype(current_dir, 20, encoding='utf-8')
     im = Image.new('RGB',(10, 10),(255, 255, 255, 0))
     draw = ImageDraw.Draw(im, 'RGB')
     img_size = draw.multiline_textsize(table_info, font=font)
