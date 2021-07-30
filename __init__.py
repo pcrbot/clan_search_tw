@@ -3,6 +3,7 @@ from .lock import *
 import os
 import shutil
 import re
+import time
 from hoshino import Service, R, priv
 from hoshino.util import FreqLimiter
 
@@ -16,6 +17,7 @@ else:
 _limtime = 5    # 单个人查询冷却时间（单位：喵）
 _flmt = FreqLimiter(_limtime)
 sv_help = '''命令如下，注意空格别漏：
+（注意：查公会查会长查排名支持模糊搜索）
 
 [查档线 1] 查看档线，数字为服务器编号(1/2/3/4)
 
@@ -62,7 +64,8 @@ async def search_line(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time()
+    uptime = get_current_time(alltext)
+    time.sleep(1)
     score_line, filename_tmp = get_score_line(alltext, uptime)
     if score_line['state'] != 'success':
         msg = '出现异常，请尝试重新输入命令！'
@@ -90,7 +93,8 @@ async def search_clan(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time()
+    uptime = get_current_time(server)
+    time.sleep(1)
     clan_score, filename_tmp = get_score_clan(server, uptime, clan_name)
     if clan_score['state'] != 'success':
         msg = '出现异常，请尝试重新输入命令！'
@@ -122,7 +126,8 @@ async def search_leader(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time()
+    uptime = get_current_time(server)
+    time.sleep(1)
     clan_score, filename_tmp = get_score_leader(server, uptime, leader_name)
     if clan_score['total'] == 0:
         msg = '未查询到信息，请确保会长名正确！'
@@ -160,7 +165,8 @@ async def search_rank(bot, ev):
         msg = '暂且仅支持 0 < rank <= 3000 排名的公会!'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time()
+    uptime = get_current_time(server)
+    time.sleep(1)
     clan_score, filename_tmp = get_score_rank(server, uptime, rank)
     if clan_score['total'] == 0:
         msg = '未查询到信息，请确保该排名下有公会存在！'
@@ -193,7 +199,8 @@ async def locked_clan(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time()
+    uptime = get_current_time(server)
+    time.sleep(1)
     clan_score, filename_tmp = get_score_clan(server, uptime, clan_name)
     if clan_score['state'] != 'success':
         msg = '出现异常，请尝试重新输入命令！'
@@ -256,7 +263,8 @@ async def search_locked(bot, ev):
     for server in server_list:
         server = server.replace('成功绑定', '')
         server = server.replace('服公会', '')
-    uptime = get_current_time()
+    uptime = get_current_time(server)
+    time.sleep(1)
     clan_score, filename_tmp = get_score_clan(server, uptime, clan_name)
     info_data = clan_score
     allid = info_data['data'].keys()
