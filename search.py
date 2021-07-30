@@ -2,10 +2,6 @@ import requests
 import os
 from prettytable import PrettyTable, PLAIN_COLUMNS
 from PIL import Image, ImageDraw, ImageFont
-import datetime
-from datetime import timedelta
-import calendar
-import time
 import re
 from hoshino import R
 
@@ -21,39 +17,15 @@ headers = {
     'Referer': 'https://kyaru.infedg.xyz/'
 }
 
-# 计算最新数据对应的时间戳，并设置相应的延迟
-def get_current_time():
-    time_now = datetime.datetime.fromtimestamp(time.time()) 
-    # print(time_now)
-
-    now = datetime.date.today()
-    this_month_end = datetime.datetime(now.year, now.month, calendar.monthrange(now.year, now.month)[1])
-    start_time = this_month_end - timedelta(days=4) + timedelta(minutes=10)
-    end_time = this_month_end + timedelta(days=1)
-
-    # 会战期间
-    if time_now >= start_time and time_now < end_time:
-        # 设定延迟10分钟，防止排名数据还未更新
-        delay = 10
-        time_tmp = time.strftime('%Y%m%d%H', time.localtime())
-        minute_tmp = time.strftime('%M', time.localtime())
-        if int(minute_tmp) >= (0 + delay) and int(minute_tmp) < (30 + delay):
-            set_minute = '00'
-        elif int(minute_tmp) < (0 + delay):
-            time_last = time_now - timedelta(hours=1)
-            time_tmp = datetime.datetime.strptime(str(time_last), '%Y-%m-%d %H:%M:%S.%f')
-            time_tmp = str(time_tmp.year) + str(time_tmp.month).zfill(2) + str(time_tmp.day).zfill(2) + str(time_tmp.hour).zfill(2)
-            set_minute = '30'
-        else:
-            set_minute = '30'
-        uptime = str(time_tmp) + set_minute
-        # print(uptime)
-    # 会战时间外
-    else:
-        this_month_start = datetime.datetime(now.year, now.month, 1)
-        time_tmp = this_month_start - timedelta(minutes=30)
-        uptime = str(time_tmp.year) + str(time_tmp.month).zfill(2) + str(time_tmp.day).zfill(2) + str(time_tmp.hour).zfill(2) + str(time_tmp.minute).zfill(2)
-        # print(uptime)
+# 获取最新数据的时间档
+def get_current_time(server):
+    url = 'https://api.infedg.xyz/current/getalltime/tw'
+    time_tmp = requests.get(url, headers = headers)
+    alltime = time_tmp.json()
+    alldays = alltime['data'][server].keys()
+    upday = list(alldays)[-1]
+    uphour = list(alltime['data'][server][upday])[-1]
+    uptime = str(upday) + str(uphour)
     return uptime
 
 
