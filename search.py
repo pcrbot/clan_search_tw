@@ -5,29 +5,56 @@ from PIL import Image, ImageDraw, ImageFont
 import re
 from hoshino import R
 
+def set_source(source_id):
+    if source_id == '1':
+        source = 'infedg.xyz'
+    if source_id == '2':
+        source = 'layvtwt.top'
+    current_dir = os.path.join(os.path.dirname(__file__), 'source.txt')
+    file = open(current_dir, 'w', encoding="UTF-8")
+    file.write(source)
+    file.close()
+    return source
+    
+def get_source():
+    current_dir = os.path.join(os.path.dirname(__file__), 'source.txt')
+    file = open(current_dir, 'r', encoding="UTF-8")
+    source = file.read()
+    file.close()
+    return source
+
 # 通用头
-headers = {
-    'Accept': 'application/json, text/javascript, */*; q=0.01',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
-    'Custom-Source': 'Kyaru',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36',
-    'Content-Type': 'application/json',
-    'Origin': 'https://kyaru.infedg.xyz',
-    'Referer': 'https://kyaru.infedg.xyz/'
-}
+def get_headers():
+    source = get_source()
+    if source == 'infedg.xyz':
+        source = 'kyaru.' + source
+    headers = {
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+        'Custom-Source': 'Kyaru',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36',
+        'Content-Type': 'application/json',
+        'Origin': f'https://{source}/',
+        'Referer': f'https://{source}/'
+    }
+    return headers
+
 
 # 获取最新数据的时间档
-def get_current_time(server):
-    url = 'https://api.infedg.xyz/current/getalltime/tw'
-    time_tmp = requests.get(url, headers = headers)
+def get_current_time(server, source):
+    if source == 'infedg.xyz':
+        source = 'api.' + source
+    elif source == 'layvtwt.top':
+        source = 'rank.' + source + '/api'
+    url = f'https://{source}/current/getalltime/tw'
+    time_tmp = requests.get(url, headers = get_headers())
     alltime = time_tmp.json()
     alldays = alltime['data'][server].keys()
     upday = list(alldays)[-1]
     uphour = list(alltime['data'][server][upday])[-1]
     uptime = str(upday) + str(uphour)
     return uptime
-
 
 # 生成图片
 def create_img(info_data, filename_tmp):
@@ -73,8 +100,12 @@ def create_img(info_data, filename_tmp):
     del draw
 
 # 返回档线信息
-def get_score_line(server, uptime):
-    url = 'https://api.infedg.xyz/search/scoreline'
+def get_score_line(server, uptime, source):
+    if source == 'infedg.xyz':
+        source = 'api.' + source
+    elif source == 'layvtwt.top':
+        source = 'rank.' + source + '/api'
+    url = f'https://{source}/search/scoreline'
     file_tmp = 'tw/' + str(server) + '/' + str(uptime)
     filename_tmp = 'tw-' + str(server) + '-' + str(uptime) + '.png'
     params = {
@@ -84,13 +115,17 @@ def get_score_line(server, uptime):
         'page_limit': 10
     }
 
-    score_line_tmp = requests.post(url, headers = headers, json = params)
+    score_line_tmp = requests.post(url, headers = get_headers(), json = params)
     score_line = score_line_tmp.json()
     return score_line, filename_tmp
 
 # 返回公会名查询信息
-def get_score_clan(server, uptime, clan_name):
-    url = 'https://api.infedg.xyz/search/clan_name'
+def get_score_clan(server, uptime, clan_name, source):
+    if source == 'infedg.xyz':
+        source = 'api.' + source
+    elif source == 'layvtwt.top':
+        source = 'rank.' + source + '/api'
+    url = f'https://{source}/search/clan_name'
     file_tmp = 'tw/' + str(server) + '/' + str(uptime)
     filename_tmp = 'tw-' + str(server) + '-' + str(uptime) + '-' + str(clan_name) + '.png'
     params = {
@@ -100,13 +135,17 @@ def get_score_clan(server, uptime, clan_name):
         'page_limit': 10
     }
 
-    clan_score_tmp = requests.post(url, headers = headers, json = params)
+    clan_score_tmp = requests.post(url, headers = get_headers(), json = params)
     clan_score = clan_score_tmp.json()
     return clan_score, filename_tmp
 
 # 返回会长名查询信息
-def get_score_leader(server, uptime, leader_name):
-    url = 'https://api.infedg.xyz/search/leader_name'
+def get_score_leader(server, uptime, leader_name, source):
+    if source == 'infedg.xyz':
+        source = 'api.' + source
+    elif source == 'layvtwt.top':
+        source = 'rank.' + source + '/api'
+    url = 'https://{source}/search/leader_name'
     file_tmp = 'tw/' + str(server) + '/' + str(uptime)
     filename_tmp = 'tw-' + str(server) + '-' + str(uptime) + '-' + str(leader_name) + '.png'
     params = {
@@ -116,13 +155,17 @@ def get_score_leader(server, uptime, leader_name):
         'page_limit': 10
     }
 
-    clan_score_tmp = requests.post(url, headers = headers, json = params)
+    clan_score_tmp = requests.post(url, headers = get_headers(), json = params)
     clan_score = clan_score_tmp.json()
     return clan_score, filename_tmp
 
 # 返回排名查询信息
-def get_score_rank(server, uptime, rank):
-    url = 'https://api.infedg.xyz/search/rank'
+def get_score_rank(server, uptime, rank, source):
+    if source == 'infedg.xyz':
+        source = 'api.' + source
+    elif source == 'layvtwt.top':
+        source = 'rank.' + source + '/api'
+    url = 'https://{source}/search/rank'
     file_tmp = 'tw/' + str(server) + '/' + str(uptime)
     filename_tmp = 'tw-' + str(server) + '-' + str(uptime) + '-' + str(rank) + '.png'
     params = {
@@ -132,6 +175,6 @@ def get_score_rank(server, uptime, rank):
         'page_limit': 10
     }
 
-    clan_score_tmp = requests.post(url, headers = headers, json = params)
+    clan_score_tmp = requests.post(url, headers = get_headers(), json = params)
     clan_score = clan_score_tmp.json()
     return clan_score, filename_tmp
