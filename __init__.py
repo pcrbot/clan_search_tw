@@ -19,6 +19,10 @@ _flmt = FreqLimiter(_limtime)
 sv_help = '''命令如下，注意空格别漏：
 （注意：查公会查会长查排名支持模糊搜索）
 
+[选择会战数据源 1] 选择数据源：1."infedg.xyz" 2."layvtwt.top" ，默认为 2 (该功能限维护组)
+
+[查看会战数据源] 查看当前使用的数据源
+
 [查档线 1] 查看档线，数字为服务器编号(1/2/3/4)
 
 [查公会 1 公会名] 按照公会名搜索公会排名，数字为服务器编号(1/2/3/4)
@@ -52,6 +56,38 @@ async def auto_clean():
     else:
         os.mkdir(R.img('clan_rank_tw').path)
 
+# 选择数据源
+@sv.on_prefix('选择会战数据源')
+async def select_source(bot, ev):
+    if not priv.check_priv(ev, priv.SUPERUSER):
+        msg = '选择数据源功能仅限维护组'
+        await bot.send(ev, msg)
+        return
+    uid = ev['user_id']
+    if not _flmt.check(uid):
+        await bot.send(ev, f'请勿频繁操作，冷却时间为{_limtime}秒！', at_sender=True)
+        return
+    alltext = ev.message.extract_plain_text()
+    if alltext != '1' and alltext != '2':
+        msg = '数据源编号错误！\n可选值有(1/2)其中：\n1."infedg.xyz"\n2."layvtwt.top"'
+        await bot.send(ev, msg)
+        return
+    else:
+        try:
+            source = set_source(alltext)
+            msg = f'当前数据源成功切换至：{source}'
+            await bot.send(ev, msg)
+        except:
+            msg = f'数据源切换失败，请重新尝试！'
+            await bot.send(ev, msg)
+
+# 查看数据源
+@sv.on_fullmatch('查看会战数据源')
+async def view_source(bot, ev):
+    source = get_source()
+    msg = f'您当前选择的数据源是：{source}'
+    await bot.send(ev, msg)
+
 # 查档线
 @sv.on_prefix('查档线')
 async def search_line(bot, ev):
@@ -64,9 +100,10 @@ async def search_line(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time(alltext)
+    source = get_source()
+    uptime = get_current_time(alltext, source)
     time.sleep(1)
-    score_line, filename_tmp = get_score_line(alltext, uptime)
+    score_line, filename_tmp = get_score_line(alltext, uptime, source)
     if score_line['state'] != 'success':
         msg = '出现异常，请尝试重新输入命令！'
         await bot.send(ev, msg)
@@ -75,7 +112,7 @@ async def search_line(bot, ev):
     line_img = ' '.join(map(str, [
         R.img(f'clan_rank_tw/' + filename_tmp).cqcode,
     ]))
-    msg = f'台服 {alltext}服 档线如下：\n时间档：{uptime}\n（数据来自infedg.xyz）\n{line_img}'
+    msg = f'台服 {alltext}服 档线如下：\n时间档：{uptime}\n（数据来自{source}）\n{line_img}'
     await bot.send(ev, msg)
 
 # 按 公会名 查询排名
@@ -93,9 +130,10 @@ async def search_clan(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time(server)
+    source = get_source()
+    uptime = get_current_time(server, source)
     time.sleep(1)
-    clan_score, filename_tmp = get_score_clan(server, uptime, clan_name)
+    clan_score, filename_tmp = get_score_clan(server, uptime, clan_name, source)
     if clan_score['state'] != 'success':
         msg = '出现异常，请尝试重新输入命令！'
         await bot.send(ev, msg)
@@ -108,7 +146,7 @@ async def search_clan(bot, ev):
     clan_img = ' '.join(map(str, [
         R.img(f'clan_rank_tw/' + filename_tmp).cqcode,
     ]))
-    msg = f'台服 {server}服 公会名查询 “{clan_name}” 结果如下：\n时间档：{uptime}\n（数据来自infedg.xyz）\n{clan_img}'
+    msg = f'台服 {server}服 公会名查询 “{clan_name}” 结果如下：\n时间档：{uptime}\n（数据来自{source}）\n{clan_img}'
     await bot.send(ev, msg)
 
 # 按 会长名 查询排名
@@ -126,9 +164,10 @@ async def search_leader(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time(server)
+    source = get_source()
+    uptime = get_current_time(server, source)
     time.sleep(1)
-    clan_score, filename_tmp = get_score_leader(server, uptime, leader_name)
+    clan_score, filename_tmp = get_score_leader(server, uptime, leader_name, source)
     if clan_score['total'] == 0:
         msg = '未查询到信息，请确保会长名正确！'
         await bot.send(ev, msg)
@@ -137,7 +176,7 @@ async def search_leader(bot, ev):
     leader_img = ' '.join(map(str, [
         R.img(f'clan_rank_tw/' + filename_tmp).cqcode,
     ]))
-    msg = f'台服 {server}服 会长名查询 “{leader_name}” 结果如下：\n时间档：{uptime}\n（数据来自infedg.xyz）\n{leader_img}'
+    msg = f'台服 {server}服 会长名查询 “{leader_name}” 结果如下：\n时间档：{uptime}\n（数据来自{source}）\n{leader_img}'
     await bot.send(ev, msg)
 
 # 按 排名 查询公会
@@ -165,9 +204,10 @@ async def search_rank(bot, ev):
         msg = '暂且仅支持 0 < rank <= 3000 排名的公会!'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time(server)
+    source = get_source()
+    uptime = get_current_time(server, source)
     time.sleep(1)
-    clan_score, filename_tmp = get_score_rank(server, uptime, rank)
+    clan_score, filename_tmp = get_score_rank(server, uptime, rank, source)
     if clan_score['total'] == 0:
         msg = '未查询到信息，请确保该排名下有公会存在！'
         await bot.send(ev, msg)
@@ -176,7 +216,7 @@ async def search_rank(bot, ev):
     rank_img = ' '.join(map(str, [
         R.img(f'clan_rank_tw/' + filename_tmp).cqcode,
     ]))
-    msg = f'台服 {server}服 会长名查询 “{rank}” 结果如下：\n时间档：{uptime}\n（数据来自infedg.xyz）\n{rank_img}'
+    msg = f'台服 {server}服 会长名查询 “{rank}” 结果如下：\n时间档：{uptime}\n（数据来自{source}）\n{rank_img}'
     await bot.send(ev, msg)
 
 # 绑定公会
@@ -199,9 +239,10 @@ async def locked_clan(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.send(ev, msg)
         return
-    uptime = get_current_time(server)
+    source = get_source()
+    uptime = get_current_time(server, source)
     time.sleep(1)
-    clan_score, filename_tmp = get_score_clan(server, uptime, clan_name)
+    clan_score, filename_tmp = get_score_clan(server, uptime, clan_name, source)
     if clan_score['state'] != 'success':
         msg = '出现异常，请尝试重新输入命令！'
         await bot.send(ev, msg)
@@ -263,9 +304,10 @@ async def search_locked(bot, ev):
     for server in server_list:
         server = server.replace('成功绑定', '')
         server = server.replace('服公会', '')
-    uptime = get_current_time(server)
+    source = get_source()
+    uptime = get_current_time(server, source)
     time.sleep(1)
-    clan_score, filename_tmp = get_score_clan(server, uptime, clan_name)
+    clan_score, filename_tmp = get_score_clan(server, uptime, clan_name, source)
     info_data = clan_score
     allid = info_data['data'].keys()
     for id in allid:
