@@ -260,7 +260,8 @@ async def locked_clan(bot, ev):
         msg = lock_clan(server, clan_name, group_id)
         await bot.send(ev, msg)
     else:
-        msg = '查询到该名字为前缀的公会有多个，请确保公会名精确！（后续添加触发选择公会的函数）'
+        msg = select_all_clan(clan_score)
+        msg = msg + '\n\n该功能需精确的公会名，因此请尝试重新输入命令！'
         await bot.send(ev, msg)
         return
 
