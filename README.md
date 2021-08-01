@@ -3,7 +3,7 @@
 
 ## 数据来自 https://kyaru.infedg.xyz/tw 和 https://rank.layvtwt.top/ （已获两位作者授权）
 
-插件后续将继续在 github 更新，不过我喜欢咕咕咕，公会同名选择功能过段时间再说
+插件后续将继续在 github 更新，不过我喜欢咕咕咕，公会同名选择功能在写了
 
 欢迎提交 isuue 和 request
 
