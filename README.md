@@ -3,11 +3,11 @@
 
 ## 数据来自 https://kyaru.infedg.xyz/tw 和 https://rank.layvtwt.top/ （已获两位作者授权）
 
-插件后续将继续在 github 更新，不过我喜欢咕咕咕，公会同名选择功能过段时间再说
-
-欢迎提交 isuue 和 request
+插件后续将继续在 github 更新，欢迎提交 isuue 和 request
 
 ## 更新日志
+
+21-08-01    v2.4    新增绑定公会时前缀同名的提醒(选择功能好像不会写，欸嘿嘿，后续再说吧)
 
 21-07-31    v2.3    新增数据源 layvtwt.top 并默认使用，妈妈再也不用担心我的数据不更新了（
 

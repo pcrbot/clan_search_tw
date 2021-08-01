@@ -18,6 +18,16 @@ def lock_clan(server, clan_name, group_id):
     msg = f'QQ群：{group_id} 已成功绑定{server}服公会“{clan_name}”'
     return msg
 
+# 多个绑定选择触发
+def select_all_clan(clan_score):
+    num = clan_score['total']
+    msg = '查询到该名字为前缀的公会如下:'
+    for num_id in range(num):
+        data_id = list(clan_score['data'].keys())[num_id]
+        clan_name = clan_score['data'][data_id]['clan_name']
+        msg = msg + '\n' + str(num_id + 1) + '. ' + str(clan_name)
+    return msg
+
 # 解绑公会
 def unlock_clan(group_id):
     current_dir = os.path.join(os.path.dirname(__file__), 'config.yml')
