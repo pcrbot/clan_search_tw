@@ -28,6 +28,8 @@ def get_headers():
     source = get_source()
     if source == 'infedg.xyz':
         source = 'kyaru.' + source
+    elif source == 'layvtwt.top':
+        source = 'rank.' + source
     headers = {
         'Accept': 'application/json, text/javascript, */*; q=0.01',
         'Accept-Encoding': 'gzip, deflate, br',
@@ -35,7 +37,7 @@ def get_headers():
         'Custom-Source': 'Kyaru',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36',
         'Content-Type': 'application/json',
-        'Origin': f'https://{source}/',
+        'Origin': f'https://{source}',
         'Referer': f'https://{source}/'
     }
     return headers
