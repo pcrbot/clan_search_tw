@@ -31,12 +31,6 @@
 
 ## 项目地址：
 
-（不影响使用的无用更新会在自己仓库，有一点影响的更新会pull到pcrbot的仓库）
-
-https://github.com/azmiao/clan_search_tw
-
-已放至pcrbot仓库
-
 https://github.com/pcrbot/clan_search_tw
 
 ## 功能
