@@ -77,13 +77,13 @@ https://www.594594.xyz/2021/07/13/clan_search_tw_for_hoshino/
 
 在 HoshinoBot\hoshino\modules 目录下使用以下命令拉取本项目
 ```
-git clone https://github.com/azmiao/clan_search_tw
+git clone https://github.com/pcrbot/clan_search_tw
 ```
 2. 安装依赖：
 
 到HoshinoBot\hoshino\modules\destiny2_hoshino_plugin目录下，打开powershell运行
 ```
-pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple
+pip install -r requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
 ```
 
 3. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'clan_search_tw'
