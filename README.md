@@ -18,7 +18,7 @@ https://github.com/pcrbot/clan_search_tw
 
 ## 最近四条更新日志
 
-22-04-11    v3.0    新增全服查询[issue #11](https://github.com/pcrbot/clan_search_tw/issues/11)，仅限layvtwt.top数据源，同时重构部分代码，优化数据结构，更换数据存储形式，规范化存储库，兼容旧版本，会在更新后首次启动时将旧版数据移过来，并删除旧版文件
+22-04-11    v3.0    新增全服查询[issue #11](https://github.com/pcrbot/clan_search_tw/issues/11)，仅限layvtwt.top数据源，同时重构部分代码，优化数据结构，更换数据存储形式，规范化存储库，添加GPL3.0协议
 
 21-08-01    v2.4    新增绑定公会时前缀同名的提醒(选择功能好像不会写，欸嘿嘿，后续再说吧)
 
@@ -44,6 +44,10 @@ https://github.com/pcrbot/clan_search_tw
 ```
 git pull
 ```
+
+#### 小提示
+
+由于v3.0后更换存储格式，因此原先的 `config.yml` 和 `source.txt` 已经不需要了，因此插件会再更新后再次重启hoshino的时候自动移动数据和删除旧版文件，下次再更新的时候会自动忽略这俩文件
 
 ## 功能
 
