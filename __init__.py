@@ -251,14 +251,14 @@ async def unlocked_clan(bot, ev):
 # 查看公会绑定状态
 @sv.on_fullmatch('查询绑定')
 async def lock_status(bot, ev):
-    group_id = ev['group_id']
+    group_id = str(ev['group_id'])
     msg, flag = await judge_lock(group_id)
     await bot.send(ev, msg)
 
 # 适用于绑定公会后的查询排名信息
 @sv.on_fullmatch('公会排名')
 async def search_locked(bot, ev):
-    group_id = ev['group_id']
+    group_id = str(ev['group_id'])
     msg, flag = await judge_lock(group_id)
     if not flag:
         msg += f'\n因此请先绑定公会'
