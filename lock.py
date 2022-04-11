@@ -1,7 +1,6 @@
 import yaml
 import json
 import os
-import asyncio
 
 # 将数据移至新配置文件
 async def move_config(current_dir, old_con_dir):
@@ -25,7 +24,6 @@ async def move_config(current_dir, old_con_dir):
     with open(current_dir, 'w', encoding='UTF-8') as f:
         json.dump(f_data, f, indent=4, ensure_ascii=False)
     # 删除旧数据文件
-    asyncio.sleep(2)
     os.remove(os.path.join(os.path.dirname(__file__), 'config.yml'))
     os.remove(os.path.join(os.path.dirname(__file__), 'source.txt'))
 

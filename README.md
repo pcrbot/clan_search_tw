@@ -45,9 +45,15 @@ https://github.com/pcrbot/clan_search_tw
 git pull
 ```
 
-#### 小提示
+#### 更新小提示
 
-由于v3.0后更换存储格式，因此原先的 `config.yml` 和 `source.txt` 已经不需要了，因此插件会再更新后再次重启hoshino的时候自动移动数据和删除旧版文件，下次再更新的时候会自动忽略这俩文件
+由于v3.0后更换存储格式，因此原先的 `config.yml` 和 `source.txt` 已经不需要了，因此插件会再更新后再次重启hoshino的时候自动移动数据和删除旧版文件，下次再更新的时候会自动忽略这俩文件。
+
+如果更新后启动报错：
+```
+ModuleNotFoundError: No module named 'hoshino.modules.clan_search_tw.source'
+```
+则关闭hoshinobot再次启动即可
 
 ## 功能
 
