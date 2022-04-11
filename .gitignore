@@ -1,0 +1,10 @@
+# 根目录下的部分数据文件
+
+# 新版配置文件
+/config.json
+
+# 旧版配置文件
+/config.yml
+
+# 旧版数据源文件
+/source.txt
