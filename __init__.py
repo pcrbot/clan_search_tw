@@ -276,13 +276,13 @@ async def search_locked(bot, ev):
     for id in allid:
         rank = info_data['data'][str(id)]['rank']
         clan_name = info_data['data'][str(id)]['clan_name']
-        member_num = info_data['data'][str(id)]['member_num']
+        member_num = str(info_data['data'][str(id)]['member_num']).replace('.0', '')
         leader_name = info_data['data'][str(id)]['leader_name']
         damage = info_data['data'][str(id)]['damage']
         lap = info_data['data'][str(id)]['lap']
         boss_id = info_data['data'][str(id)]['boss_id']
         remain = info_data['data'][str(id)]['remain']
-        grade_rank = info_data['data'][str(id)]['grade_rank']
+        grade_rank = str(info_data['data'][str(id)]['grade_rank']).replace('.0', '')
     msg = f'公会名：{clan_name}\n时间档：{uptime}\n排名：{rank}'
     msg += f'\n会长：{leader_name}\n人数：{member_num}人\n分数：{damage}'
     msg += f'\n周目：{lap}周目\n当前BOSS：{boss_id}\n剩余血量：{remain}\n上期排名：{grade_rank}'
