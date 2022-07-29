@@ -227,7 +227,7 @@ async def locked_clan(bot, ev):
         msg, flag = await judge_lock(group_id)
         if flag:
             msg += f'\n因此请勿重复绑定'
-        await bot.finish(ev, msg)
+            await bot.finish(ev, msg)
         msg = await lock_clan(server, clan_name, group_id)
         await bot.send(ev, msg)
     else:
