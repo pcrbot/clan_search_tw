@@ -18,16 +18,18 @@ https://github.com/pcrbot/clan_search_tw
 
 ## 最近四条更新日志
 
+23-07-03    v3.1    适配合服后的三服、四服查询
+
 22-04-11    v3.0    新增全服查询[issue #11](https://github.com/pcrbot/clan_search_tw/issues/11)，仅限layvtwt.top数据源，同时重构部分代码，优化数据结构，更换数据存储形式，规范化存储库，添加GPL3.0协议
 
 21-08-01    v2.4    新增绑定公会时前缀同名的提醒(选择功能好像不会写，欸嘿嘿，后续再说吧)
 
 21-07-31    v2.3    新增数据源 layvtwt.top 并默认使用，妈妈再也不用担心我的数据不更新了（
 
-21-07-30    v2.2    修复时间档异常导致查询出错的问题
-
 <details>
 <summary>更以前的更新日志</summary>
+
+21-07-30    v2.2    修复时间档异常导致查询出错的问题
 
 21-07-28    v2.1    修复图片缩进问题，并将绑定公会后的查询改为文字描述，（注意：不绑定公会的三个查询支持模糊搜索）
 
@@ -82,13 +84,7 @@ ModuleNotFoundError: No module named 'hoshino.modules.clan_search_tw.source'
 [公会排名] 查询本QQ群所绑定的公会的排名
 ```
 
-## 简单食用教程：
-
-可看下方链接：
-
-https://www.594594.xyz/2021/07/13/clan_search_tw_for_hoshino/
-
-或本页面：
+## 食用教程
 
 1. git clone本插件：
 

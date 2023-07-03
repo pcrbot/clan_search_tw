@@ -1,11 +1,12 @@
-import os
-import json
-import shutil
 import asyncio
+import json
+import os
+import shutil
+
+from hoshino import Service, R, priv
 
 from .lock import move_config, lock_clan, select_all_clan, unlock_clan, judge_lock
 from .search import set_source, get_source, get_current_time, create_img, get_search_rank
-from hoshino import Service, R, priv
 
 # 首次启动本插件的时候创建配置文件
 con_info = {
@@ -57,10 +58,12 @@ sv_help = '''
 
 sv = Service('clan_rank_tw', help_=sv_help, bundle='台服会战排名查询')
 
-#帮助界面
+
+# 帮助界面
 @sv.on_fullmatch('会战排名帮助')
 async def help(bot, ev):
     await bot.send(ev, sv_help)
+
 
 # 选择数据源
 @sv.on_prefix('选择会战数据源')
@@ -81,12 +84,14 @@ async def select_source(bot, ev):
             msg = f'数据源切换失败，请重新尝试！'
             await bot.send(ev, msg)
 
+
 # 查看数据源
 @sv.on_fullmatch('查看会战数据源')
 async def view_source(bot, ev):
     source = await get_source()
     msg = f'您当前选择的数据源是：{source}'
     await bot.send(ev, msg)
+
 
 # 查档线
 @sv.on_prefix('查档线')
@@ -96,6 +101,7 @@ async def search_line(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.finish(ev, msg)
     source = await get_source()
+    alltext = '2' if alltext == '3' or alltext == '4' else alltext
     uptime = await get_current_time(alltext, source)
     await asyncio.sleep(0.5)
     score_line, filename_tmp = await get_search_rank(alltext, uptime, source, 'scoreline')
@@ -106,6 +112,7 @@ async def search_line(bot, ev):
     line_img = R.img(f'clan_rank_tw/' + filename_tmp).cqcode
     msg = f'台服 {alltext}服 档线如下：\n时间档：{uptime}\n（数据来自{source}）\n{line_img}'
     await bot.send(ev, msg)
+
 
 # 按 公会名 查询排名
 @sv.on_prefix('查公会')
@@ -119,6 +126,7 @@ async def search_clan(bot, ev):
         await bot.finish(ev, msg)
     is_all = True if server == 'all' else False
     server = 'merge' if server == 'all' else server
+    server = '2' if server == '3' or server == '4' else server
     source = await get_source()
     if source == 'infedg.xyz' and server == 'merge':
         await bot.finish(ev, f'{source}暂不支持全服查询，请数据源更换至 layvtwt.top')
@@ -137,6 +145,7 @@ async def search_clan(bot, ev):
     msg = f'台服 {server}服 公会名查询 “{clan_name}” 结果如下：\n时间档：{uptime}\n（数据来自{source}）\n{clan_img}'
     await bot.send(ev, msg)
 
+
 # 按 会长名 查询排名
 @sv.on_prefix('查会长')
 async def search_leader(bot, ev):
@@ -149,6 +158,7 @@ async def search_leader(bot, ev):
         await bot.finish(ev, msg)
     is_all = True if server == 'all' else False
     server = 'merge' if server == 'all' else server
+    server = '2' if server == '3' or server == '4' else server
     source = await get_source()
     if source == 'infedg.xyz' and server == 'merge':
         await bot.finish(ev, f'{source}暂不支持全服查询，请数据源更换至 layvtwt.top')
@@ -163,6 +173,7 @@ async def search_leader(bot, ev):
     server = '全' if server == 'merge' else server
     msg = f'台服 {server}服 会长名查询 “{leader_name}” 结果如下：\n时间档：{uptime}\n（数据来自{source}）\n{leader_img}'
     await bot.send(ev, msg)
+
 
 # 按 排名 查询公会
 @sv.on_prefix('查排名')
@@ -184,6 +195,7 @@ async def search_rank(bot, ev):
         await bot.finish(ev, msg)
     is_all = True if server == 'all' else False
     server = 'merge' if server == 'all' else server
+    server = '2' if server == '3' or server == '4' else server
     source = await get_source()
     if source == 'infedg.xyz' and server == 'merge':
         await bot.finish(ev, f'{source}暂不支持全服查询，请数据源更换至 layvtwt.top')
@@ -198,6 +210,7 @@ async def search_rank(bot, ev):
     server = '全' if server == 'merge' else server
     msg = f'台服 {server}服 会长名查询 “{rank}” 结果如下：\n时间档：{uptime}\n（数据来自{source}）\n{rank_img}'
     await bot.send(ev, msg)
+
 
 # 绑定公会
 @sv.on_prefix('绑定公会')
@@ -214,6 +227,7 @@ async def locked_clan(bot, ev):
         msg = '服务器编号错误！(可选值有：1/2/3/4)'
         await bot.finish(ev, msg)
     source = await get_source()
+    server = '2' if server == '3' or server == '4' else server
     uptime = await get_current_time(server, source)
     await asyncio.sleep(0.5)
     clan_score, filename_tmp = await get_search_rank(server, uptime, source, 'clan_name', clan_name)
@@ -235,6 +249,7 @@ async def locked_clan(bot, ev):
         msg += '\n\n该功能需精确的公会名，因此请尝试重新输入命令！'
         await bot.send(ev, msg)
 
+
 # 解绑公会
 @sv.on_fullmatch('解绑公会')
 async def unlocked_clan(bot, ev):
@@ -249,12 +264,14 @@ async def unlocked_clan(bot, ev):
     msg = await unlock_clan(group_id)
     await bot.send(ev, msg)
 
+
 # 查看公会绑定状态
 @sv.on_fullmatch('查询绑定')
 async def lock_status(bot, ev):
     group_id = str(ev['group_id'])
     msg, flag = await judge_lock(group_id)
     await bot.send(ev, msg)
+
 
 # 适用于绑定公会后的查询排名信息
 @sv.on_fullmatch('公会排名')
@@ -270,6 +287,7 @@ async def search_locked(bot, ev):
     server = f_data['bind'][group_id]['server']
     clan_name = f_data['bind'][group_id]['clan_name']
     source = await get_source()
+    server = '2' if server == '3' or server == '4' else server
     uptime = await get_current_time(server, source)
     await asyncio.sleep(0.5)
     info_data, filename_tmp = await get_search_rank(server, uptime, source, 'clan_name', clan_name)
