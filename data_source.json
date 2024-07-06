@@ -1,0 +1,15 @@
+{
+    "current": "layvtwt.top",
+    "source_list": {
+        "layvtwt.top": {
+            "api": "https://rank.layvtwt.top/api",
+            "domain": "rank.layvtwt.top",
+            "remarks": "目前唯一可用数据源"
+        },
+        "infedg.xyz": {
+            "api": "https://kyaru.infedg.xyz",
+            "domain": "kyaru.infedg.xyz",
+            "remarks": "目前不可用，仅作留档"
+        }
+    }
+}
