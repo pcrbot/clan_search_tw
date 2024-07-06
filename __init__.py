@@ -232,32 +232,32 @@ async def search_locked(bot, ev):
         return
 
     with open(current_dir, 'r', encoding='UTF-8') as af:
-        f_data = json.load(af)
-    server = f_data[group_id]['server']
-    clan_name = f_data[group_id]['clan_name']
+        config_data = json.load(af)
+    server = config_data[group_id]['server']
+    clan_name = config_data[group_id]['clan_name']
 
     f_data = await get_source()
     up_time = await get_current_time(server, f_data)
     await asyncio.sleep(0.5)
 
     info_data, filename_tmp = await get_search_rank(server, up_time, f_data, 'clan_name', clan_name)
-    clan_list = list(info_data['data'])
+    clan_list = dict(info_data['data'])
     if not clan_list:
         await bot.send(ev, f'无法查询到本群绑定的公会[{clan_name}]')
         return
 
-    clan = clan_list[0]
+    rank_list = list(clan_list.keys())
+    clan = clan_list.get(rank_list[0], {})
+
     rank = clan['rank']
     clan_name = clan['clan_name']
     member_num = str(clan['member_num']).replace('.0', '')
     leader_name = clan['leader_name']
     damage = clan['damage']
     lap = clan['lap']
-    boss_id = clan['boss_id']
-    remain = clan['remain']
     grade_rank = str(clan['grade_rank']).replace('.0', '')
 
     msg = f'公会名：{clan_name}\n时间档：{up_time}\n排名：{rank}'
     msg += f'\n会长：{leader_name}\n人数：{member_num}人\n分数：{damage}'
-    msg += f'\n周目：{lap}周目\n当前BOSS：{boss_id}\n剩余血量：{remain}\n上期排名：{grade_rank}'
+    msg += f'\n等效周目：{lap}周目\n上期排名：{grade_rank}'
     await bot.send(ev, msg)

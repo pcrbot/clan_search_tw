@@ -10,13 +10,21 @@ https://github.com/pcrbot/clan_search_tw
 
 ## 注意
 
-## 数据来自 https://kyaru.infedg.xyz/tw 和 https://rank.layvtwt.top/ （已获两位作者授权）
+## 数据来自 https://kyaru.infedg.xyz
 
-插件后续将继续在 github 更新，欢迎提交 isuue 和 Pull request
+支持其他数据源，需要在`data_source.json`中填入后，使用命令切换一下数据源即可，如果有新的数据源可向本项目提交PR
 
-问题说明：插件支持两个数据源，默认第二个：https://kyaru.infedg.xyz/tw 和 https://rank.layvtwt.top/
+```
+        "layvtwt.top": { // 数据源名字，随便写即可
+            "api": "https://rank.layvtwt.top/api", // 数据请求接口
+            "domain": "rank.layvtwt.top", // 完整域名
+            "remarks": "目前唯一可用数据源" // 备注
+        }
+```
 
 ## 最近四条更新日志
+
+24-07-06    v3.2    重构垃圾代码，需要删除旧项目重新安装
 
 23-07-03    v3.1    适配合服后的三服、四服查询
 
@@ -24,10 +32,10 @@ https://github.com/pcrbot/clan_search_tw
 
 21-08-01    v2.4    新增绑定公会时前缀同名的提醒(选择功能好像不会写，欸嘿嘿，后续再说吧)
 
-21-07-31    v2.3    新增数据源 layvtwt.top 并默认使用，妈妈再也不用担心我的数据不更新了（
-
 <details>
 <summary>更以前的更新日志</summary>
+
+21-07-31    v2.3    新增数据源 layvtwt.top 并默认使用，妈妈再也不用担心我的数据不更新了（
 
 21-07-30    v2.2    修复时间档异常导致查询出错的问题
 
@@ -47,39 +55,26 @@ https://github.com/pcrbot/clan_search_tw
 git pull
 ```
 
-#### 更新小提示
-
-由于v3.0后更换存储格式，因此原先的 `config.yml` 和 `source.txt` 已经不需要了，因此插件会再更新后再次重启hoshino的时候自动移动数据和删除旧版文件，下次再更新的时候会自动忽略这俩文件。
-
-如果更新后启动报错：
-```
-ModuleNotFoundError: No module named 'hoshino.modules.clan_search_tw.source'
-```
-则关闭hoshinobot再次启动即可
-
 ## 功能
 
 ```
 命令如下，注意空格别漏
-注：查公会、查会长、查排名可以选择(1/2/3/4/all)，其中all为全服查询
 
-[选择会战数据源 1] 选择数据源：1."infedg.xyz" 2."layvtwt.top" ，默认为 2 (该功能限维护组)
+注：查询可选择服(1:台一服, 2:台二三四服, all:全服)
 
-[查看会战数据源] 查看当前使用的数据源
+[查档线 1] 查看档线，数字为服务器编号(1/2)
 
-[查档线 1] 查看档线，数字为服务器编号(1/2/3/4)
+[查公会 1 公会名] 按照公会名搜索公会排名，数字为服务器编号(1/2/all)
 
-[查公会 1 公会名] 按照公会名搜索公会排名，数字为服务器编号(1/2/3/4/all)
+[查会长 1 会长名] 按照会长名搜索公会排名，数字为服务器编号(1/2/all)
 
-[查会长 1 会长名] 按照会长名搜索公会排名，数字为服务器编号(1/2/3/4/all)
+[查排名 1 排名] 按照排名搜索公会排名，数字为服务器编号(1/2/all)
 
-[查排名 1 排名] 按照排名搜索公会排名，数字为服务器编号(1/2/3/4/all)
-
-[绑定公会 1 公会名] 绑定QQ群和公会(一群限一个公会，只能管理员和群主绑定)，数字为服务器编号(1/2/3/4)
+[绑定公会 1 公会名] 绑定QQ群和公会(一群限一个公会，只能管理员和群主绑定)，数字为服务器编号(1/2)
 
 [解绑公会] 解绑本QQ群和已绑定的公会(只能管理员和群主解绑)
 
-[查询绑定] 查询本QQ群的绑定状态
+[查询公会绑定] 查询本QQ群的绑定状态
 
 [公会排名] 查询本QQ群所绑定的公会的排名
 ```
@@ -92,6 +87,7 @@ ModuleNotFoundError: No module named 'hoshino.modules.clan_search_tw.source'
 ```
 git clone https://github.com/pcrbot/clan_search_tw
 ```
+
 2. 安装依赖：
 
 到HoshinoBot\hoshino\modules\destiny2_hoshino_plugin目录下，打开powershell运行
